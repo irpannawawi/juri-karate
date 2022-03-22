@@ -6,7 +6,11 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+// Admin
 router.get('/admin', adminController.index );
 router.post('/act_login', adminController.login );
+
+// Juri 
+router.get('/juri', adminController.juri);
 
 module.exports = router;

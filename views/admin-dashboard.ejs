@@ -25,31 +25,36 @@
 	</head>
 	<body>
 		<div class="container">
-			<div class="row">
-				<div class="col"></div>
-			</div>
+			<nav class="navbar navbar-light bg-light border-bottom border-primary">
+			  <div class="container-fluid">
+			    <a class="navbar-brand d-flex align-items-center" href="#">
+			      <img src="/images/kki.png" alt="" width="85" height="85" class="d-inline-block align-text-top">
+			      <h1 class="align-middle">KKI SUMSEL</h1>
+			    </a>
+			  </div>
+			</nav>
 			<div class="row p-3">
 				<div class="card">
 					<div class="card-header">
-						<h1 align="center">Penilaian</h1>
+						<h4 align="center">Penilaian</h4>
 					</div>
 					<div class="card-body">
 						<table class="table table-bordered">
 							<tr>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
+								<td id="j1n1">0</td>
+								<td id="j2n1">0</td>
+								<td id="j3n1">0</td>
+								<td id="j4n1">0</td>
+								<td id="j5n1">0</td>
 								<td rowspan="3"></td>
-								<td rowspan="3" class="pt-4">0</td>
+								<td rowspan="3" class="pt-4" id="total-nilai">0</td>
 							</tr>
 							<tr>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
-								<td>0</td>
+								<td id="j1n2">0</td>
+								<td id="j2n2">0</td>
+								<td id="j3n2">0</td>
+								<td id="j4n2">0</td>
+								<td id="j5n2">0</td>
 							</tr>
 							<tr class="bg-dark text-white">
 								<td>Juri 1</td>
@@ -65,6 +70,24 @@
 					</div>
 				</div>
 			</div>
+			<footer class="d-flex align-items-center justify-content-center py-2 my-2 border-top fixed-bottom">
+		      <span class="text-muted">&copy; Sandemo</span>
+  		</footer>
 		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+        socket.on('connected', (data)=>{
+        	console.log(data)
+        });
+
+        socket.on('broadcast_update_nilai_atletik', (data)=>{
+        	console.log(data)
+        });
+
+    </script>
+
 	</body>
 </html>

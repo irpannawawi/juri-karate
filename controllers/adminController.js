@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 function index ( req, res ){
-	if(req.session.role != 'admin') res.redirect('/')
+	// if(req.session.role != 'admin') res.redirect('/')
 	let data = {
 		role:req.session.role
 	}
@@ -10,22 +10,24 @@ function index ( req, res ){
 
 
 function juri ( req, res ){
-	if(req.session.role != 'juri') res.redirect('/')
+	// if(req.session.role != 'juri') res.redirect('/')
 	let data = {
-		role:req.session.role
+		role:req.session.role,
+		username:req.session.username
 	}
-	res.render('juri-dashboard');
+	console.log(data)
+	res.render('juri-dashboard', data);
 }
 
 
 function authenticate(user, pass){
 	let users = {
 		admin:{	password: 'abrakadabra', role: 'admin' },
-		juri1:{ password: 'passjur1', role: 'jur1' },
-		juri2:{ password: 'passjur2', role: 'jur2' },
-		juri3:{ password: 'passjur3', role: 'jur3' },
-		juri4:{ password: 'passjur4', role: 'jur4' },
-		juri5:{ password: 'passjur5', role: 'jur5' },
+		juri1:{ password: 'passjur1', role: 'juri' },
+		juri2:{ password: 'passjur2', role: 'juri' },
+		juri3:{ password: 'passjur3', role: 'juri' },
+		juri4:{ password: 'passjur4', role: 'juri' },
+		juri5:{ password: 'passjur5', role: 'juri' },
 
 	}
 	if(users[user]){
@@ -46,6 +48,7 @@ function login(req, res){
 	console.log(auth)
 	if(auth.status){
 		req.session.role = auth.data.role
+		req.session.username = username
 		console.log({session: req.session})
 		if(req.session.role == 'admin'){
 			res.redirect('/admin')

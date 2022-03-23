@@ -21,6 +21,9 @@
     		font-style: italic;
     		font-weight: bold;
     	}
+    	#total-nilai{
+    		vertical-align: middle;
+    	}
     </style>
 	</head>
 	<body>
@@ -41,20 +44,20 @@
 					<div class="card-body">
 						<table class="table table-bordered">
 							<tr>
-								<td id="j1n1">0</td>
-								<td id="j2n1">0</td>
-								<td id="j3n1">0</td>
-								<td id="j4n1">0</td>
-								<td id="j5n1">0</td>
+								<td id="juri1n1" class="nilai">0</td>
+								<td id="juri2n1" class="nilai">0</td>
+								<td id="juri3n1" class="nilai">0</td>
+								<td id="juri4n1" class="nilai">0</td>
+								<td id="juri5n1" class="nilai">0</td>
 								<td rowspan="3"></td>
-								<td rowspan="3" class="pt-4" id="total-nilai">0</td>
+								<td rowspan="3" class="pt-4" id="total-nilai" class="nilai">0</td>
 							</tr>
 							<tr>
-								<td id="j1n2">0</td>
-								<td id="j2n2">0</td>
-								<td id="j3n2">0</td>
-								<td id="j4n2">0</td>
-								<td id="j5n2">0</td>
+								<td id="juri1n2" class="nilai">0</td>
+								<td id="juri2n2" class="nilai">0</td>
+								<td id="juri3n2" class="nilai">0</td>
+								<td id="juri4n2" class="nilai">0</td>
+								<td id="juri5n2" class="nilai">0</td>
 							</tr>
 							<tr class="bg-dark text-white">
 								<td>Juri 1</td>
@@ -66,7 +69,7 @@
 						</table>
 					</div>
 					<div class="card-footer">
-						<button class="form-control btn btn-primary">Reset</button>
+						<button class="form-control btn btn-primary" onclick="reset_juri()">Reset</button>
 					</div>
 				</div>
 			</div>
@@ -76,6 +79,8 @@
 		</div>
 
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
 <script src="/socket.io/socket.io.js"></script>
     <script>
         var socket = io();
@@ -84,8 +89,51 @@
         });
 
         socket.on('broadcast_update_nilai_atletik', (data)=>{
-        	console.log(data)
+        	$('#'+data.juri+'n1').html(data.nilai);
+        	refresh_nilai();
         });
+
+        socket.on('broadcast_update_nilai_tehnikal', (data)=>{
+        	$('#'+data.juri+'n2').html(data.nilai);
+        	refresh_nilai();
+        });
+
+        function refresh_nilai(){
+        	let nilai = calculate();
+        	$('#total-nilai').html(nilai);
+        }
+
+        function calculate(){
+        	var na1 = parseFloat($('#juri1n1').html());
+					var na2 = parseFloat($('#juri2n1').html());
+					var na3 = parseFloat($('#juri3n1').html());
+					var na4 = parseFloat($('#juri4n1').html());
+					var na5 = parseFloat($('#juri5n1').html());
+
+					var nt1 = parseFloat($('#juri1n2').html());
+					var nt2 = parseFloat($('#juri2n2').html());
+					var nt3 = parseFloat($('#juri3n2').html());
+					var nt4 = parseFloat($('#juri4n2').html());
+					var nt5 = parseFloat($('#juri5n2').html());
+        	const atletik = [na1, na2, na3, na4, na5]
+        	const tehnikal = [nt1, nt2, nt3, nt4, nt5]
+
+        	var nilai1 = atletik.reduce((a, b) => a + b, 0)
+        	var nilai2 = tehnikal.reduce((a, b) => a + b, 0)
+
+        	var max_atletik = Math.max(...atletik)
+        	var min_atletik = Math.min(...atletik)
+        	var max_tehnikal = Math.max(...tehnikal)
+        	var min_tehnikal = Math.min(...tehnikal)
+        	console.log({nilai1: nilai1, nilai2:nilai2 })
+        	return (nilai1-(max_atletik+min_atletik))+( nilai2 - ( max_tehnikal+min_tehnikal ))
+        }
+
+        function reset_juri(){
+        	$('.nilai').html(0)
+        	socket.emit('reset_juri', {reset_juri: true});
+
+        }
 
     </script>
 

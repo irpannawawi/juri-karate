@@ -1,11 +1,19 @@
 const fs = require('fs');
-const session = require('express-session');
+
 function index ( req, res ){
-	res.render('admin-dashboard');
+	if(req.session.role != 'admin') res.redirect('/')
+	let data = {
+		role:req.session.role
+	}
+	res.render('admin-dashboard', data);
 }
 
 
 function juri ( req, res ){
+	if(req.session.role != 'juri') res.redirect('/')
+	let data = {
+		role:req.session.role
+	}
 	res.render('juri-dashboard');
 }
 
@@ -20,11 +28,14 @@ function authenticate(user, pass){
 		juri5:{ password: 'passjur5', role: 'jur5' },
 
 	}
-	console.log(user)
-	if(users[user].password === pass){
-		return true;
+	if(users[user]){
+		if(users[user].password === pass) {
+			return {status: true, data:users[user]};
+		}else{
+			return {status:false, msg: "password not match"}
+		}
 	}else{
-		return false
+		return {status: false, msg: "user not found"};
 	}
 }
 
@@ -32,12 +43,19 @@ function login(req, res){
 	const username = req.body.username;
 	const password = req.body.password;
 	let auth = authenticate(username, password);
-	
-	if(auth){
-		req.session.user = "udin"
-	}
-	res.send('oke')
-	
+	console.log(auth)
+	if(auth.status){
+		req.session.role = auth.data.role
+		console.log({session: req.session})
+		if(req.session.role == 'admin'){
+			res.redirect('/admin')
+		}else{
+			res.redirect('/juri')
+		}
+	}else{
+		console.log(auth.msg)
+		res.redirect('/')
+	}	
 }
 module.exports.index = index;
 module.exports.login = login;
